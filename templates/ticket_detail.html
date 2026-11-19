@@ -1,0 +1,37 @@
+{% extends "base.html" %}{% block title %}Ticket HD-{{ '%05d'|format(ticket.id) }}{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+  <div><a class="back-link" href="{{ url_for('dashboard') }}">← Dashboard</a><div class="eyebrow mt-3">HD-{{ '%05d'|format(ticket.id) }}</div><h1 class="page-title mb-1">{{ ticket.title }}</h1><span class="muted small">Created {{ ticket.created_at }}</span></div>
+  <span class="status status-{{ ticket.status|lower|replace(' ', '-') }}">{{ ticket.status }}</span>
+</div>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="panel mb-4"><h5>Issue description</h5><p class="description-text">{{ ticket.description }}</p></div>
+    <div class="panel"><h5 class="mb-3">Activity & comments</h5>
+      {% for c in comments %}
+      <div class="comment"><div class="d-flex justify-content-between gap-2"><strong>{{ c.author_name }}</strong><span class="muted small">{{ c.created_at }}</span></div><div class="muted small mb-2">{{ c.author_role|title }}</div><p class="mb-0">{{ c.message }}</p></div>
+      {% else %}<p class="muted">No comments yet.</p>{% endfor %}
+      <form method="post" class="mt-3"><input type="hidden" name="action" value="comment"><label class="form-label">Add a comment</label><textarea class="form-control mb-2" name="message" rows="3" required placeholder="Add troubleshooting notes or an update..."></textarea><button class="btn btn-primary btn-sm">Post comment</button></form>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel">
+      <h5>Ticket information</h5>
+      <div class="detail-row"><span>Requester</span><strong>{{ ticket.requester_name }}</strong></div>
+      <div class="detail-row"><span>Category</span><strong>{{ ticket.category }}</strong></div>
+      <div class="detail-row"><span>Priority</span><strong>{{ ticket.priority }}</strong></div>
+      <div class="detail-row"><span>Assigned to</span><strong>{{ ticket.agent_name or 'Unassigned' }}</strong></div>
+      <div class="detail-row"><span>Last updated</span><strong>{{ ticket.updated_at }}</strong></div>
+      {% if g.user.role in ['admin','agent'] %}
+      <hr><h6>Update ticket</h6>
+      <form method="post"><input type="hidden" name="action" value="update">
+        <label class="form-label small">Status</label><select class="form-select mb-3" name="status">{% for s in statuses %}<option {% if ticket.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select>
+        <label class="form-label small">Priority</label><select class="form-select mb-3" name="priority">{% for p in priorities %}<option {% if ticket.priority == p %}selected{% endif %}>{{ p }}</option>{% endfor %}</select>
+        <label class="form-label small">Assign to</label><select class="form-select mb-3" name="assigned_to"><option value="">Unassigned</option>{% for a in agents %}<option value="{{ a.id }}" {% if ticket.assigned_to == a.id %}selected{% endif %}>{{ a.name }}</option>{% endfor %}</select>
+        <button class="btn btn-primary w-100">Save changes</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

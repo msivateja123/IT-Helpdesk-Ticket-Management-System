@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+  <div><div class="eyebrow">OVERVIEW</div><h1 class="page-title">Ticket dashboard</h1>
+  <p class="muted mb-0">Track issues, ownership and resolution progress.</p></div>
+  {% if g.user.role in ['requester','admin'] %}<a class="btn btn-primary" href="{{ url_for('new_ticket') }}">＋ New ticket</a>{% endif %}
+</div>
+<div class="row g-3 mb-4">
+  {% for label, value in counts.items() %}
+  <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-label">{{ label }}</div><div class="stat-number">{{ value }}</div></div></div>
+  {% endfor %}
+</div>
+<div class="panel">
+  <form class="row g-2 mb-3" method="get">
+    <div class="col-md"><input class="form-control" name="q" value="{{ search }}" placeholder="Search title, ticket ID or description"></div>
+    <div class="col-md-3"><select class="form-select" name="status"><option value="">All statuses</option>{% for s in statuses %}<option value="{{ s }}" {% if selected_status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></div>
+    <div class="col-auto"><button class="btn btn-dark">Filter</button></div>
+    <div class="col-auto"><a class="btn btn-outline-secondary" href="{{ url_for('dashboard') }}">Reset</a></div>
+  </form>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th>Ticket</th><th>Category</th><th>Priority</th><th>Status</th><th>Requester</th><th>Assigned to</th><th>Updated</th></tr></thead>
+      <tbody>
+      {% for t in tickets %}
+        <tr>
+          <td><a class="ticket-link" href="{{ url_for('ticket_detail', ticket_id=t.id) }}">HD-{{ '%05d'|format(t.id) }}<br><span class="fw-semibold text-dark">{{ t.title }}</span></a></td>
+          <td>{{ t.category }}</td><td><span class="priority priority-{{ t.priority|lower|replace(' ', '-') }}">{{ t.priority }}</span></td>
+          <td><span class="status status-{{ t.status|lower|replace(' ', '-') }}">{{ t.status }}</span></td>
+          <td>{{ t.requester_name }}</td><td>{{ t.agent_name or 'Unassigned' }}</td><td class="muted small">{{ t.updated_at }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7" class="empty-state">No tickets found. Create a ticket or adjust your filters.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

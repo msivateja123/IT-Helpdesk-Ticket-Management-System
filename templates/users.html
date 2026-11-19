@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}User management{% endblock %}
+{% block content %}
+<div class="eyebrow">ADMINISTRATION</div><h1 class="page-title">User management</h1><p class="muted mb-4">Create support-agent accounts and review registered users.</p>
+<div class="row g-4">
+  <div class="col-lg-5"><div class="panel"><h5>Create an account</h5><form method="post">
+    <label class="form-label">Full name</label><input class="form-control mb-3" name="name" required>
+    <label class="form-label">Email</label><input class="form-control mb-3" type="email" name="email" required>
+    <label class="form-label">Temporary password (8+ characters)</label><input class="form-control mb-3" type="password" name="password" minlength="8" required>
+    <label class="form-label">Role</label><select class="form-select mb-3" name="role"><option value="agent">Support Agent</option><option value="requester">Requester</option></select>
+    <button class="btn btn-primary">Create user</button>
+  </form></div></div>
+  <div class="col-lg-7"><div class="panel"><h5>Registered users</h5><div class="table-responsive"><table class="table"><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>{% for u in users %}<tr><td>{{ u.name }}</td><td>{{ u.email }}</td><td>{{ u.role|title }}</td></tr>{% endfor %}</tbody></table></div></div></div>
+</div>
+{% endblock %}
