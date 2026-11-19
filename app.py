@@ -356,8 +356,8 @@ def forbidden(error):
 def not_found(error):
     return render_template("error.html", code=404, message="The page or ticket could not be found."), 404
 
+with app.app_context():
+    init_db()
 
 if __name__ == "__main__":
-    with app.app_context():
-        init_db()
     app.run(debug=True)
