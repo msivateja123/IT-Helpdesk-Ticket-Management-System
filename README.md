@@ -104,3 +104,18 @@ it_helpdesk_ticket_management_system/
 ## Important security note
 
 This is a learning/portfolio application, not a production-ready service desk. Before public production use, add CSRF protection, rate limiting, secure environment-based secrets, HTTPS, audit logging, stronger account lifecycle controls and automated tests. The built-in Flask development server is for local development only.
+
+
+## Application Screenshots
+
+### 1. Login Page
+![Login Page](screenshots/login.png)
+
+### 2. Admin Dashboard
+![Admin Dashboard](screenshots/dashboard.png)
+
+### 3. Create Ticket
+![Create Ticket](screenshots/create-ticket.png)
+
+### 4. Ticket Details
+![Ticket Details](screenshots/ticket-details.png)
